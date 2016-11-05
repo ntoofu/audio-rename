@@ -78,12 +78,12 @@ func RenameFileFunc(rootDir string, isDryrun bool) filepath.WalkFunc {
         newPath := fmt.Sprintf("%s/%s", rootDir, relNewPath)
         log.Printf("===> %s", newPath)
 
-        if isDryrun {
+        if _,err := os.Stat(newPath); !os.IsNotExist(err) {
+            log.Println("(file already exists. skipping...)")
             return nil
         }
 
-        if _,err := os.Stat(newPath); !os.IsNotExist(err) {
-            log.Println("(file already exists. skipping...)")
+        if isDryrun {
             return nil
         }
 
