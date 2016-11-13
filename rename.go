@@ -29,13 +29,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := filepath.Walk(source, RenameFileFunc(rootDir, isDryrun)); err != nil {
+	if err := filepath.Walk(source, renameFileFunc(rootDir, isDryrun)); err != nil {
 		log.Fatal(err)
 	}
 
 }
 
-func IsInStrSlice(str string, slice []string) bool {
+func isInStrSlice(str string, slice []string) bool {
 	for _, elem := range slice {
 		if str == elem {
 			return true
@@ -44,7 +44,7 @@ func IsInStrSlice(str string, slice []string) bool {
 	return false
 }
 
-func RenameFileFunc(rootDir string, isDryrun bool) filepath.WalkFunc {
+func renameFileFunc(rootDir string, isDryrun bool) filepath.WalkFunc {
 	supportFileType := []string{".flac", ".mp3", ".m4a", "aac", ".FLAC", ".MP3", ".M4A", "AAC"}
 
 	// Return function of filepath.WalkFunc type.
@@ -54,7 +54,7 @@ func RenameFileFunc(rootDir string, isDryrun bool) filepath.WalkFunc {
 			return nil
 		}
 
-		if !IsInStrSlice(filepath.Ext(path), supportFileType) {
+		if !isInStrSlice(filepath.Ext(path), supportFileType) {
 			return nil
 		}
 
@@ -70,7 +70,7 @@ func RenameFileFunc(rootDir string, isDryrun bool) filepath.WalkFunc {
 			return err
 		}
 
-		relNewPath, err := FilepathFmt(audioTag, filepath.Ext(path))
+		relNewPath, err := filepathFmt(audioTag, filepath.Ext(path))
 		if err != nil {
 			return err
 		}
@@ -99,7 +99,7 @@ func RenameFileFunc(rootDir string, isDryrun bool) filepath.WalkFunc {
 	}
 }
 
-func FilepathFmt(tags tag.Metadata, fileExt string) (string, error) {
+func filepathFmt(tags tag.Metadata, fileExt string) (string, error) {
 	discN, discMax := tags.Disc()
 	trackN, _ := tags.Track()
 	title := tags.Title()
